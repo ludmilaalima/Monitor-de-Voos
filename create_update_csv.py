@@ -1,41 +1,34 @@
 import pandas as pd
 import os
 from pathlib import Path
+from datetime import datetime
+import shortuuid
 
 
 
 class CreateUpdateCsv:
-    def __init__(self, data=None):
-        self.data_link = None
+    def __init__(self, data='data.csv'):
+        self.data_link = Path(data)
 
     def create_csv(self):
-        for file in os.listdir(Path.cwd()):
-            if file.endswith(".csv"):
-                continue
-        
-        df = pd.DataFrame(
-            {
-                "id" : {}, 
-                "price": {}, 
-                'data' : {}
-            }
-        )
-
-
-        df.to_csv("data.csv", index=False)
+        if "data.csv" not in os.listdir(Path.cwd()):
+    
+            df = pd.DataFrame(columns=['id', 'price', "date"])
+            df.to_csv("data.csv", index=False)
+           
 
     def update_csv(self, element):
-        for file in os.listdir(Path.cwd()):
-            if file.endswith('.csv'):
-                self.data_link = file
-
-
+        
+        date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+        id = shortuuid.uuid()[:8]
 
         new_line = {
-            'id' : {1},
-            'price' : {element},
-            'data' : {1}
+            'id' : id,
+            'price' : element,
+            'date' : date
         }
-        df = pd.read_csv(self.data_link)
-        df = pd.concat([df, pd.DataFrame([new_line])], ignore_index=True)
-        df.to_csv(self.data_link, index=False)
+
+        pd.DataFrame([new_line], columns = ['id', 'price', 'date']).to_csv(
+            self.data_link, mode='a', header=False, index=False
+        )
+        
