@@ -5,24 +5,40 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from pathlib import Path
 from create_update_csv import CreateUpdateCsv
+from selenium.webdriver.chrome.options import Options
 
+
+options = Options()
+options.add_argument("--disable-blink-features=AutomationControlled") # desativar flag de bot
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option("useAutomationExtension", False)
+driver = webdriver.Chrome(options=options) #abre instancia 
 
 create_update_csv = CreateUpdateCsv()
 create_update_csv.create_csv() 
 
-driver = webdriver.Chrome() #abre instancia 
-driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhpAEgoyMDI1LTEyLTExIiAKA0NQVhIKMjAyNS0xMi0xMRoDQ05GKgJBRDIENDI4OWoHCAESA0NQVnIHCAESA0NORhoeEgoyMDI1LTEyLTE2agcIARIDQ05GcgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=CmxDalJJZUd4NWFuTk5SbDlSUXpCQlFXdEpWRUZDUnkwdExTMHRMUzB0TFdObFoza3hOMEZCUVVGQlIycFdlRVZGVFVGWk9FOUJFZ1pCUkRReU9Ea2FDd2p0eUFZUUFob0RRbEpNT0J4dzNwd0ISBggCIAIoASIDCgEw') #acessar navegador
+
+#acessar navegador
+driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI1LTEyLTExagcIARIDQ1BWcgwIAxIIL20vMGwzcTIaIxIKMjAyNS0xMi0xNmoMCAMSCC9tLzBsM3EycgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
 driver.maximize_window()
 
 
-voos = driver.find_element(By.CSS_SELECTOR, "[aria-label$= 'Mostrar mais voos']")
+'''voos = driver.find_element(By.CSS_SELECTOR, "[aria-label$= 'Mostrar mais voos']")
 voos.click()
 
-
-
-'''wait = WebDriverWait(driver, 60)
+wait = WebDriverWait(driver, 60)
 wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[aria-label$='Mostrar menos voos']")))'''
 
+
+try:
+    wait = WebDriverWait(driver, 20)
+    wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Encontrando as opções de reserva mais baratas…')]")))
+    print("achei mensagem")
+except:
+    print("nao apareceu")
+
+
+time.sleep(10)
 # achar elementos
 elements_price = driver.find_elements(By.CSS_SELECTOR, "[aria-label$='Reais brasileiros']")
 
