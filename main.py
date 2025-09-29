@@ -30,12 +30,12 @@ wait = WebDriverWait(driver, 60)
 wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[aria-label$='Mostrar menos voos']")))'''
 
 
-try:
-    wait = WebDriverWait(driver, 20)
-    wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Encontrando as opções de reserva mais baratas…')]")))
-    print("achei mensagem")
-except:
-    print("nao apareceu")
+wait = WebDriverWait(driver, 20)
+driver.save_screenshot("erro.png")
+wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
+wait.until_not(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
+
+
 
 
 time.sleep(10)
