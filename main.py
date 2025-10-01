@@ -31,7 +31,7 @@ wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[aria-label$='Mos
 
 
 wait = WebDriverWait(driver, 20)
-driver.save_screenshot("erro.png")
+#driver.save_screenshot("erro.png")
 wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
 wait.until_not(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
 
@@ -40,13 +40,12 @@ wait.until_not(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(
 
 time.sleep(10)
 # achar elementos
-elements_price = driver.find_elements(By.CSS_SELECTOR, "[aria-label$='Reais brasileiros']")
+list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
-print(elements_price)
-
-for element in elements_price:
-    if element.text:
-        create_update_csv.update_csv(element.text)
+for i, card in enumerate(list_card_voos):
+    if card.text:
+        print(list_card_voos[1].text)
+        #create_update_csv.update_csv(list_card_voos.text)
     
     
 
