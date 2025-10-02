@@ -8,6 +8,12 @@ from create_update_csv import CreateUpdateCsv
 from selenium.webdriver.chrome.options import Options
 
 
+def extract_card(card):
+    for lines in card:
+        ...
+
+
+
 options = Options()
 options.add_argument("--disable-blink-features=AutomationControlled") # desativar flag de bot
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -42,12 +48,15 @@ time.sleep(10)
 # achar elementos
 list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
-for i, card in enumerate(list_card_voos):
-    if card.text:
-        print(list_card_voos[1].text)
+
+
+for i, x in enumerate(list_card_voos):
+    if list_card_voos[i]:
+        extract_card(list_card_voos[i].text)
         #create_update_csv.update_csv(list_card_voos.text)
     
     
+
 
 
 
