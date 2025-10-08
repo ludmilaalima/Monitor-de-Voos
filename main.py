@@ -6,11 +6,19 @@ import time
 from pathlib import Path
 from create_update_csv import CreateUpdateCsv
 from selenium.webdriver.chrome.options import Options
+import re
 
 
-def extract_card(card):
-    for lines in card:
-        ...
+def extract_card(text):
+        airline_name_start = text[3]
+        airline_name_end = 0
+        for i, _ in enumerate(text):
+            if '%h' in text(airline_name_end):
+                continue
+            else:
+                airline_name_end =  airline_name_end + 1 
+             
+        create_update_csv.update_csv(text)
 
 
 
@@ -50,10 +58,15 @@ list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
 
 
-for i, x in enumerate(list_card_voos):
+for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
-        extract_card(list_card_voos[i].text)
-        #create_update_csv.update_csv(list_card_voos.text)
+        #text = list_card_voos.getText
+        text = list_card_voos[i].text
+        text = re.sub(r"\s+", " ", text).strip()
+        text = text.split()
+        print(text)
+        extract_card(text)
+        
     
     
 
