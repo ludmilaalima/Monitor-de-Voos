@@ -10,20 +10,28 @@ import re
 
 
 def extract_card(text):
-        airline_name_start = text[3]
         airline_name_end = 0
-        for i, _ in enumerate(text):
-            if '%h' in text(airline_name_end):
-                continue
-            else:
-                airline_name_end =  airline_name_end + 1 
-             
-        create_update_csv.update_csv(text)
+        for i in range(3, len(text)):
+           extract = text[i]
+           find_h = re.search(r'\b\d+h\b', extract)
+           if find_h:
+                break
+           else:
+                airline_name_end = airline_name_end + 1
+
+        kwargs = {}
+        if airline_name_end > 1:
+            airline_name_start = 3
+            airline_name_end = airline_name_start + airline_name_end
+            airline_name = text[airline_name_start:airline_name_end]
+            kwargs["airline_name"] = airline_name
+            print(airline_name, airline_name_start, airline_name_end)
+        create_update_csv.update_csv(text, **kwargs)
 
 
 
 options = Options()
-options.add_argument("--disable-blink-features=AutomationControlled") # desativar flag de bot
+options.add_argument("--disable-blink-features=AutomationControlled") 
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 driver = webdriver.Chrome(options=options) #abre instancia 
@@ -60,7 +68,6 @@ list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
 for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
-        #text = list_card_voos.getText
         text = list_card_voos[i].text
         text = re.sub(r"\s+", " ", text).strip()
         text = text.split()

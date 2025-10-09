@@ -17,10 +17,12 @@ class CreateUpdateCsv:
             df.to_csv("data.csv", index=False)
            
 
-    def update_csv(self, element):
+    def update_csv(self, element, airline_name=None):
         
         date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         id = shortuuid.uuid()[:8]
+
+        print(airline_name)
 
         new_line = {
             'id': id,
