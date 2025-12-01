@@ -74,8 +74,6 @@ def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
     if raw_airline is None:
         return None
 
-    
-
     if isinstance(raw_airline, list):
         raw_airline = " ".join(raw_airline)
     else:
