@@ -4,31 +4,19 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 from pathlib import Path
-from create_update_csv import CreateUpdateCsv
+
 from selenium.webdriver.chrome.options import Options
 import re
-from pprint import pprint
+
+from create_update_csv import CreateUpdateCsv
 
 
-KNOW_AIRLINES = ['AZUL', 'LATAM', 'LATAM AIRLINES BRASIL']
+
+KNOW_AIRLINES = ['AZUL', 'LATAM', 'GOL']
 
 
-def search(a):
-     '''
-     pesquisa
-     
-     '''
-
-def parse_card(tokens):
-    ...
-
-
-def extract_card(text):
-    
-    kwargs = {}
-   
-
-    airline_name_count = 0
+def find_h(text):
+    position_h = 0
 
     for i in range(3, len(text)):
         extract = text[i]
@@ -37,33 +25,40 @@ def extract_card(text):
         if find_h:
             break
         else:
-            airline_name_count += 1
+            position_h += 1
 
-    airline_name = text[3]
+    
+    return position_h
+    
+
+
+def extract_card(text, position_h):
+    
+    kwargs = {}
+    all_airline_name = ''
+    
+    airline_name_start = 3
+    airline_name_end = airline_name_start + position_h 
     # inicio e fim da string 
-    if airline_name_count > 1:
-        airline_name_start = 3
-        airline_name_end = airline_name_start + airline_name_count
-        airline_name = text[airline_name_start:airline_name_end]
-
-     
-        #kwargs["airline_name"] = airline_name
-
-        print(airline_name, airline_name_start, airline_name_end)
+    if position_h > 1:
+        all_airline_name = text[airline_name_start:airline_name_end]
+    else:
+        all_airline_name = text[3]
 
     # quantas paradas 
     escale = ''
     for i in range(0, len(text)): 
         if text[i] == 'Sem':
-            escale = text[i]
+            escale = 0
         elif text[i] in ('parada', 'paradas'):
             escale = text[i-1]
 
 
     # aeroporto inicial e final
-    raw_airline = airline_name
+    raw_airline = all_airline_name
     main_airline, all_airlines = extract_airlines(raw_airline)
 
+    print(main_airline, all_airlines)
     kwargs["main_airline"] = main_airline
     kwargs["all_airlines"] = all_airlines
  
@@ -72,25 +67,29 @@ def extract_card(text):
 
 def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
     if raw_airline is None:
-        return None
+        return None, None
 
     if isinstance(raw_airline, list):
         raw_airline = " ".join(raw_airline)
-    else:
-        raw_airline = str(raw_airline)
+
     raw_airline = raw_airline.upper()
-    
+
 
     found = []
     for airline in know_airlines:
         if airline in raw_airline:
             found.append(airline)
 
-    
-    main_airline = found[0]
-    all_airlines = " | ".join(found)
+    '''all_airlines = []
+    for i, string in enumerate(raw_airline): # GOL, LATAN, AZUL
+        for know_airline in know_airlines: # AZUL, LATAM, GOL
+            if know_airline in string:
+                all_airlines.append(know_airline)'''
 
-    return main_airline, all_airlines
+    
+    
+
+    #return main_airline, all_airlines
 
 
 
@@ -107,24 +106,17 @@ create_update_csv.create_csv()
 
 
 #acessar navegador
-driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI1LTEyLTExagcIARIDQ1BWcgwIAxIIL20vMGwzcTIaIxIKMjAyNS0xMi0xNmoMCAMSCC9tLzBsM3EycgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
+driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDRk9ScgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDRk9SQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
+#('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDQ1BWcgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
 driver.maximize_window()
 
-
-'''voos = driver.find_element(By.CSS_SELECTOR, "[aria-label$= 'Mostrar mais voos']")
-voos.click()
-
-wait = WebDriverWait(driver, 60)
-wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "[aria-label$='Mostrar menos voos']")))'''
-
-
+# tempo para que os itens aparecam
 wait = WebDriverWait(driver, 20)
-#driver.save_screenshot("erro.png")
 wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
-wait.until_not(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
-
-
+wait.until(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
 time.sleep(10)
+
+
 # achar elementos
 list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
@@ -133,10 +125,11 @@ list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
         text = list_card_voos[i].text
-        text = re.sub(r"\s+", " ", text)#.strip()
+        text = re.sub(r"\s+", " ", text) 
         text = text.split()
         print(text)
-        extract_card(text)
+        position_h = find_h(text)
+        extract_card(text, position_h)
         
     
     

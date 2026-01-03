@@ -18,7 +18,7 @@ class CreateUpdateCsv:
             df.to_csv("data.csv", index=False, encoding='utf-8-sig')
            
 
-    def update_csv(self, element, escale, main_airline=None, all_airlines=None):
+    def update_csv(self, element, escale, main_airline, all_airlines):
         
         date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         id = shortuuid.uuid()[:8]
@@ -28,7 +28,7 @@ class CreateUpdateCsv:
             'id': id,
             'departure_time_local' : element[0],
             'arrival_time_local': element[2],
-            'main_airline': main_airline ,
+            'main_airline': main_airline,
             'all_airlines': all_airlines,
             'duration_iso8601': element[4:6], 
             'destination_iata': 0, 
@@ -39,7 +39,7 @@ class CreateUpdateCsv:
             "extracted_at": date
         }
 
-        pd.DataFrame([new_line], columns = ['id', 'departure_time_local', 'arrival_time_local', 'airline_name', 'duration_iso8601', 'destination_iata', 'num_stops', 'origin_iata', 'emissions_co2e_kg', 'price', "extracted_at"]).to_csv(
+        pd.DataFrame([new_line], columns = ['id', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601', 'destination_iata', 'num_stops', 'origin_iata', 'emissions_co2e_kg', 'price', "extracted_at"]).to_csv(
             self.data_link, mode='a', header=False, index=False, encoding='utf-8'
         )
         
