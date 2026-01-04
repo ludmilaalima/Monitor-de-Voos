@@ -18,7 +18,7 @@ class CreateUpdateCsv:
             df.to_csv("data.csv", index=False, encoding='utf-8-sig')
            
 
-    def update_csv(self, element, escale, main_airline, all_airlines):
+    def update_csv(self, element, escale, main_airline, all_airlines, price, kg_index):
         
         date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         id = shortuuid.uuid()[:8]
@@ -30,12 +30,12 @@ class CreateUpdateCsv:
             'arrival_time_local': element[2],
             'main_airline': main_airline,
             'all_airlines': all_airlines,
-            'duration_iso8601': element[4:6], 
+            'duration_iso8601': 0, 
             'destination_iata': 0, 
-            'num_stops': 0 if escale == 'Sem' else escale, 
+            'num_stops': escale, 
             'origin_iata': 0,
-            'emissions_co2e_kg': element[10:11],
-            'price': element[18],
+            'emissions_co2e_kg': kg_index,
+            'price': "R$ " + price,
             "extracted_at": date
         }
 

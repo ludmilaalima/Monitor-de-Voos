@@ -27,12 +27,21 @@ def find_h(text):
         else:
             position_h += 1
 
-    
     return position_h
-    
 
+def find_price(text):
+    for i, string in enumerate(text):
+        if 'R$' in string:
+            return i, text[i+1]
+        
 
-def extract_card(text, position_h):
+def find_kg(text, price_index):
+    for i, string in enumerate(text):
+        if 'kg' in string:
+            return text[i-1:price_index]
+            
+
+def extract_card(text, position_h, price, kg_index):
     
     kwargs = {}
     all_airline_name = ''
@@ -58,9 +67,10 @@ def extract_card(text, position_h):
     raw_airline = all_airline_name
     main_airline, all_airlines = extract_airlines(raw_airline)
 
-    print(main_airline, all_airlines)
     kwargs["main_airline"] = main_airline
     kwargs["all_airlines"] = all_airlines
+    kwargs["price"] = price
+    kwargs["kg_index"] = kg_index
  
     create_update_csv.update_csv(text, escale, **kwargs)
 
@@ -78,18 +88,21 @@ def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
     found = []
     for airline in know_airlines:
         if airline in raw_airline:
-            found.append(airline)
+            found.append(airline) 
 
-    '''all_airlines = []
-    for i, string in enumerate(raw_airline): # GOL, LATAN, AZUL
-        for know_airline in know_airlines: # AZUL, LATAM, GOL
+    raw_airline = raw_airline.split()
+    all_airlines = []
+    for string in raw_airline: # GOL, LATAN, AZUL
+        for know_airline in found: # AZUL, LATAM, GOL
             if know_airline in string:
-                all_airlines.append(know_airline)'''
+                if know_airline in all_airlines:
+                    continue
+                all_airlines.append(know_airline)
 
-    
-    
+    main_airline = all_airlines[0]
+    all_airlines = " | ".join(all_airlines)
 
-    #return main_airline, all_airlines
+    return main_airline, all_airlines
 
 
 
@@ -127,9 +140,11 @@ for i, _ in enumerate(list_card_voos):
         text = list_card_voos[i].text
         text = re.sub(r"\s+", " ", text) 
         text = text.split()
-        print(text)
         position_h = find_h(text)
-        extract_card(text, position_h)
+        index_price, price = find_price(text)
+        kg_index = find_kg(text, index_price)
+        print(text)
+        extract_card(text, position_h, price, kg_index)
         
     
     
