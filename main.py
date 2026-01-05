@@ -39,9 +39,18 @@ def find_kg(text, price_index):
     for i, string in enumerate(text):
         if 'kg' in string:
             return text[i-1:price_index]
+        
+def find_iatas(text):
+    for string in text:
+        match = re.search(r'\b([A-Z]{3})\s*[-–—]\s*([A-Z]{3})\b', string)
+        if match:
+            origin_iata = match.group(1)
+            destination_iata = match.group(2)
+            return origin_iata, destination_iata
+
             
 
-def extract_card(text, position_h, price, kg_index):
+def extract_card(text, position_h, price, kg_index_raw, origin, destination):
     
     kwargs = {}
     all_airline_name = ''
@@ -67,10 +76,28 @@ def extract_card(text, position_h, price, kg_index):
     raw_airline = all_airline_name
     main_airline, all_airlines = extract_airlines(raw_airline)
 
+
+    #duration iso8601
+    hour = text[airline_name_end]
+    minute = text[airline_name_end+1]
+
+    if len(minute) > 3:
+        minute = 00
+
+    print(f"{hour} {minute}")
+
+    # consertar horas 
+    hour = hour.replace("h", "")
+
     kwargs["main_airline"] = main_airline
     kwargs["all_airlines"] = all_airlines
-    kwargs["price"] = price
-    kwargs["kg_index"] = kg_index
+    kwargs["price"] = float(price)
+    kwargs["kg_index_raw"] = kg_index_raw
+    kwargs["origin_iata"] = origin
+    kwargs["destination_iatas"] = destination
+    kwargs["duration_iso8601"] = f"PT{hour}H{minute}M"
+    kwargs["duration_minutes"] = int(hour) * 60 + int(minute)
+
  
     create_update_csv.update_csv(text, escale, **kwargs)
 
@@ -142,9 +169,10 @@ for i, _ in enumerate(list_card_voos):
         text = text.split()
         position_h = find_h(text)
         index_price, price = find_price(text)
-        kg_index = find_kg(text, index_price)
+        kg_index_raw = find_kg(text, index_price)
+        origin, destination = find_iatas(text)
         print(text)
-        extract_card(text, position_h, price, kg_index)
+        extract_card(text, position_h, price, kg_index_raw, origin, destination)
         
     
     
