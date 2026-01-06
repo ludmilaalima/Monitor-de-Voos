@@ -11,12 +11,20 @@ class CreateUpdateCsv:
         data='data.csv'
         self.data_link = Path(data)
 
+        data_bronze_raw =  'bronze_flights_raw.jsonl'
+        self.data_bronze_raw = Path(data_bronze_raw)
+
     def create_csv(self):
         if "data.csv" not in os.listdir(Path.cwd()):
     
             df = pd.DataFrame(columns=['id', 'origin_iata', 'destination_iata', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601', 'duration_minutes', 'num_stops', 'emissions_raw', 'emissions_co2e_kg', 'price', "extracted_at"])
             df.to_csv("data.csv", index=False, encoding='utf-8-sig')
-           
+
+        if 'bronze_flights_raw.jsonl' not in os.listdir(Path.cwd()):
+            df = pd.DataFrame(columns=["id", 'extracted_at', "route", 'card_text_raw'])
+            df.to_json('bronze_flights_raw.jsonl', orient='records', lines=True, force_ascii=False)
+
+
 
     def update_csv(self, element, escale, main_airline, all_airlines, price, kg_index_raw, origin_iata, destination_iatas, duration_iso8601, duration_minutes):
         
