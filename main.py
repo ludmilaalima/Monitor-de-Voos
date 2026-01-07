@@ -8,7 +8,7 @@ from pathlib import Path
 from selenium.webdriver.chrome.options import Options
 import re
 
-from create_update_csv import CreateUpdateCsv
+from create_update_files import CreateUpdateFiles
 
 
 
@@ -50,7 +50,7 @@ def find_iatas(text):
 
             
 
-def extract_card(text, position_h, price, kg_index_raw, origin, destination):
+def extract_card(text, position_h, price, kg_index_raw, origin, destination, id, extracted_at):
     
     kwargs = {}
     all_airline_name = ''
@@ -89,6 +89,9 @@ def extract_card(text, position_h, price, kg_index_raw, origin, destination):
     # consertar horas 
     hour = hour.replace("h", "")
 
+
+    kwargs["id"] = id
+    kwargs['extracted_at'] = extracted_at
     kwargs["main_airline"] = main_airline
     kwargs["all_airlines"] = all_airlines
     kwargs["price"] = float(price)
@@ -97,9 +100,10 @@ def extract_card(text, position_h, price, kg_index_raw, origin, destination):
     kwargs["destination_iatas"] = destination
     kwargs["duration_iso8601"] = f"PT{hour}H{minute}M"
     kwargs["duration_minutes"] = int(hour) * 60 + int(minute)
+   
 
  
-    create_update_csv.update_csv(text, escale, **kwargs)
+    create_update_files.update_silver(text, escale, **kwargs)
 
 
 def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
@@ -141,8 +145,8 @@ options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
 driver = webdriver.Chrome(options=options) #abre instancia 
 
-create_update_csv = CreateUpdateCsv()
-create_update_csv.create_csv() 
+create_update_files = CreateUpdateFiles()
+create_update_files.create_storage() 
 
 
 #acessar navegador
@@ -164,7 +168,10 @@ list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
 for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
+        # colocar raw aqui retornando id e extracao, o resto permanesce
         text = list_card_voos[i].text
+        id, extracted_at = create_update_files.save_bronze(text)
+
         text = re.sub(r"\s+", " ", text) 
         text = text.split()
         position_h = find_h(text)
@@ -172,7 +179,7 @@ for i, _ in enumerate(list_card_voos):
         kg_index_raw = find_kg(text, index_price)
         origin, destination = find_iatas(text)
         print(text)
-        extract_card(text, position_h, price, kg_index_raw, origin, destination)
+        extract_card(text, position_h, price, kg_index_raw, origin, destination, id, extracted_at)
         
     
     
