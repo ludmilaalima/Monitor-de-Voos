@@ -15,20 +15,21 @@ class CreateUpdateFiles:
 
         # silver 
         data='silver_flights.csv'
-        self.data_link = Path(data)
+        self.data_silver = Path(data)
+
 
         
 
     def create_storage(self):
 
-        if self.data_bronze_raw not in os.listdir(Path.cwd()):
+        if self.data_bronze_raw.name not in os.listdir(Path.cwd()):
             open(self.data_bronze_raw, 'a', encoding='utf-8').close()
 
 
-        if self.data_link not in os.listdir(Path.cwd()):
+        if self.data_silver.name not in os.listdir(Path.cwd()):
     
             df = pd.DataFrame(columns=['id', 'origin_iata', 'destination_iata', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601', 'duration_minutes', 'num_stops', 'emissions_raw', 'emissions_co2e_kg', 'price', "extracted_at"])
-            df.to_csv(self.data_link, index=False, encoding='utf-8-sig')
+            df.to_csv(self.data_silver, index=False, encoding='utf-8-sig')
 
 
 
@@ -40,13 +41,13 @@ class CreateUpdateFiles:
 
         register = {'id': id, "extracted_at": date, 'text': text}
         with open(self.data_bronze_raw, 'a', encoding='utf-8') as f:
-            f.write(json.dumps(register, ensure_ascii=False))
+            f.write(json.dumps(register, ensure_ascii=False) + '\n')
 
 
         return id, date
 
 
-    def update_silver(self, text, escale, id, extracted_at, main_airline, all_airlines, price, kg_index_raw, origin_iata, destination_iatas, duration_iso8601, duration_minutes):
+    def update_silver(self, text, escale, id, extracted_at, main_airline, all_airlines, price, kg_index_raw, origin_iata, destination_iata, duration_iso8601, duration_minutes):
 
 
 
@@ -56,7 +57,7 @@ class CreateUpdateFiles:
         new_line = {
             'id': id,
             'origin_iata': origin_iata,
-            'destination_iata': destination_iatas, 
+            'destination_iata': destination_iata, 
             'departure_time_local' : text[0],
             'arrival_time_local': text[2],
             'main_airline': main_airline,
@@ -72,6 +73,6 @@ class CreateUpdateFiles:
 
 
         pd.DataFrame([new_line], columns = ['id', 'origin_iata', 'destination_iata', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601',  'duration_minutes', 'num_stops',  'emissions_raw', 'emissions_co2e_kg', 'price', "extracted_at"]).to_csv(
-            self.data_link, mode='a', header=False, index=False, encoding='utf-8'
+            self.data_silver, mode='a', header=False, index=False, encoding='utf-8'
         )
         

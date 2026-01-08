@@ -97,7 +97,7 @@ def extract_card(text, position_h, price, kg_index_raw, origin, destination, id,
     kwargs["price"] = float(price)
     kwargs["kg_index_raw"] = kg_index_raw
     kwargs["origin_iata"] = origin
-    kwargs["destination_iatas"] = destination
+    kwargs["destination_iata"] = destination
     kwargs["duration_iso8601"] = f"PT{hour}H{minute}M"
     kwargs["duration_minutes"] = int(hour) * 60 + int(minute)
    
