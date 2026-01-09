@@ -29,16 +29,22 @@ def find_h(text):
 
     return position_h
 
+    
+
 def find_price(text):
     for i, string in enumerate(text):
         if 'R$' in string:
             return i, text[i+1]
+    return None, None
+        
         
 
 def find_kg(text, price_index):
     for i, string in enumerate(text):
         if 'kg' in string:
             return text[i-1:price_index]
+    
+    return None, None
         
 def find_iatas(text):
     for string in text:
@@ -47,6 +53,8 @@ def find_iatas(text):
             origin_iata = match.group(1)
             destination_iata = match.group(2)
             return origin_iata, destination_iata
+    
+    return None, None
 
             
 
@@ -89,7 +97,6 @@ def extract_card(text, position_h, price, kg_index_raw, origin, destination, id,
     # consertar horas 
     hour = hour.replace("h", "")
 
-
     kwargs["id"] = id
     kwargs['extracted_at'] = extracted_at
     kwargs["main_airline"] = main_airline
@@ -100,10 +107,14 @@ def extract_card(text, position_h, price, kg_index_raw, origin, destination, id,
     kwargs["destination_iata"] = destination
     kwargs["duration_iso8601"] = f"PT{hour}H{minute}M"
     kwargs["duration_minutes"] = int(hour) * 60 + int(minute)
-   
 
- 
-    create_update_files.update_silver(text, escale, **kwargs)
+    
+    # campos obrigatorios
+    check_all = [id, origin, destination, price, text[0], text[2]]
+    all_not_null = all(v is not None for v in check_all)
+
+    if all_not_null:
+        create_update_files.update_silver(text, escale, **kwargs)
 
 
 def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
