@@ -8,7 +8,7 @@ from pathlib import Path
 from selenium.webdriver.chrome.options import Options
 import re
 
-from create_update_files import CreateUpdateFiles
+from test import CreateUpdateFiles
 
 
 

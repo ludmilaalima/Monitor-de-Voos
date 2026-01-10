@@ -18,8 +18,6 @@ class CreateUpdateFiles:
         self.data_silver = Path(data)
 
 
-        
-
     def create_storage(self):
 
         if self.data_bronze_raw.name not in os.listdir(Path.cwd()):
@@ -35,7 +33,6 @@ class CreateUpdateFiles:
 
     def save_bronze(self, text):
 
-
         date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         id = shortuuid.uuid()[:8]
 
@@ -46,9 +43,7 @@ class CreateUpdateFiles:
 
         return id, date
 
-
     def update_silver(self, text, escale, id, extracted_at, main_airline, all_airlines, price, kg_index_raw, origin_iata, destination_iata, duration_iso8601, duration_minutes):
-
 
 
         kg_index = kg_index_raw[0]
