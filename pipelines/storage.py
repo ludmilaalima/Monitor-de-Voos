@@ -170,7 +170,7 @@ class CreateUpdateFiles:
         all_not_null = all(v is not None for v in check_all)
 
         if all_not_null:
-            create_update_files.update_silver(text, escale, **kwargs)
+            self.update_silver(text, escale, **kwargs)
 
 
 

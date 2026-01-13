@@ -177,8 +177,6 @@ list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
 
 
-#### 
-
 for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
         # colocar raw aqui retornando id e extracao, o resto permanesce
