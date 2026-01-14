@@ -16,17 +16,17 @@ class CreateUpdateFiles:
         self.data_bronze_raw = Path(data_bronze_raw)
 
         # silver 
-        data='silver_flights.csv'
+        data='data/silver/silver_flights.csv'
         self.data_silver = Path(data)
 
 
     def create_storage(self):
 
-        if self.data_bronze_raw.name not in os.listdir(Path.cwd()):
+        if self.data_bronze_raw.exists() :
             open(self.data_bronze_raw, 'a', encoding='utf-8').close()
 
 
-        if self.data_silver.name not in os.listdir(Path.cwd()):
+        if self.data_silver.exists():
     
             df = pd.DataFrame(columns=['id', 'origin_iata', 'destination_iata', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601', 'duration_minutes', 'num_stops', 'emissions_raw', 'emissions_co2e_kg', 'price', "extracted_at"])
             df.to_csv(self.data_silver, index=False, encoding='utf-8-sig')

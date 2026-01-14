@@ -133,4 +133,4 @@ class GoogleFlightsParser:
         all_not_null = all(v is not None for v in check_all)
 
         if all_not_null:
-            return (text, escale, *kwargs.values)
+            return (text, escale, *kwargs)

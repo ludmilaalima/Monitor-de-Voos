@@ -5,11 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
-from pathlib import Path
-
 from selenium.webdriver.chrome.options import Options
-import re
-
 from pipelines.storage import CreateUpdateFiles
 
 
@@ -45,6 +41,8 @@ for i, _ in enumerate(list_card_voos):
     if list_card_voos[i]:
         # colocar raw aqui retornando id e extracao, o resto permanesce
         text = list_card_voos[i].text
-        create_update_files.save_bronze(text)
+        create_update_files.update_bronze(text)
+
+driver.quit()
      
         
