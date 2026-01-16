@@ -31,7 +31,6 @@ class BronzeToSilver:
             index_price, price = self.parser.find_price(text)
             kg_index_raw = self.parser.find_kg(text, index_price)
             origin, destination = self.parser.find_iatas(text)
-            print(text)
             parsed = self.parser.parse_card(text, position_h, price, kg_index_raw, origin, destination, item["id"], item['extracted_at'])
             if parsed:
                 self.storage.update_silver(parsed)

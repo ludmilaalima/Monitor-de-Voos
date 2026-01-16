@@ -133,4 +133,18 @@ class GoogleFlightsParser:
         all_not_null = all(v is not None for v in check_all)
 
         if all_not_null:
-            return (text, escale, *kwargs)
+           
+            return {"id": id,
+            "origin_iata": origin,
+            "destination_iata": destination,
+            "departure_time_local": text[0],
+            "arrival_time_local": text[2],
+            "main_airline": main_airline,
+            "all_airlines": all_airlines,
+            "duration_iso8601": f"PT{hour}H{minute}M",
+            "duration_minutes": int(hour) * 60 + int(minute),
+            "num_stops": int(escale),
+            "emissions_raw": kg_index_raw,
+            "price": price,
+            "extracted_at": extracted_at,
+        }
