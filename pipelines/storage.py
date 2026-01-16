@@ -41,11 +41,9 @@ class CreateUpdateFiles:
         with open(self.data_bronze_raw, 'a', encoding='utf-8') as f:
             f.write(json.dumps(register, ensure_ascii=False) + '\n')
 
-
-        return id, date
     
 
-    def update_silver(self, text, escale, id, extracted_at, main_airline, all_airlines, price, kg_index_raw, origin_iata, destination_iata, duration_iso8601, duration_minutes):
+    def update_silver(self, id, destination_iata, departure_time_local, arrival_time_local, main_airline, all_airlines, extracted_at, duration_iso8601, duration_minutes, num_stops, emissions_raw, price, kg_index_raw, origin_iata):
 
 
         kg_index = kg_index_raw[0]
@@ -55,13 +53,13 @@ class CreateUpdateFiles:
             'id': id,
             'origin_iata': origin_iata,
             'destination_iata': destination_iata, 
-            'departure_time_local' : text[0],
-            'arrival_time_local': text[2],
+            'departure_time_local' : departure_time_local,
+            'arrival_time_local': arrival_time_local,
             'main_airline': main_airline,
             'all_airlines': all_airlines,
             'duration_iso8601': duration_iso8601, 
             'duration_minutes': duration_minutes,
-            'num_stops': int(escale), 
+            'num_stops': int(num_stops), 
             'emissions_raw': kg_index_raw,
             'emissions_co2e_kg': kg_index,
             'price': price,
