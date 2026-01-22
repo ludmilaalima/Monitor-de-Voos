@@ -8,7 +8,6 @@ import json
 
 
 
-
 class CreateUpdateFiles:
     def __init__(self):
         # bronze - raw
@@ -41,12 +40,13 @@ class CreateUpdateFiles:
         with open(self.data_bronze_raw, 'a', encoding='utf-8') as f:
             f.write(json.dumps(register, ensure_ascii=False) + '\n')
 
-    
-
-    def update_silver(self, id, destination_iata, departure_time_local, arrival_time_local, main_airline, all_airlines, extracted_at, duration_iso8601, duration_minutes, num_stops, emissions_raw, price, kg_index_raw, origin_iata):
 
 
-        kg_index = kg_index_raw[0]
+
+    def update_silver(self, id, origin_iata, destination_iata, departure_time_local, arrival_time_local, main_airline, all_airlines,  duration_iso8601,  duration_minutes, num_stops, emissions_raw,  price, extracted_at):
+
+
+        kg_index = emissions_raw[0]
         kg_index_raw = " ".join(kg_index_raw)
 
         new_line = {

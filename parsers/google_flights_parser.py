@@ -116,17 +116,6 @@ class GoogleFlightsParser:
         # consertar horas 
         hour = hour.replace("h", "")
 
-        kwargs["id"] = id
-        kwargs['extracted_at'] = extracted_at
-        kwargs["main_airline"] = main_airline
-        kwargs["all_airlines"] = all_airlines
-        kwargs["price"] = float(price)
-        kwargs["kg_index_raw"] = kg_index_raw
-        kwargs["origin_iata"] = origin
-        kwargs["destination_iata"] = destination
-        kwargs["duration_iso8601"] = f"PT{hour}H{minute}M"
-        kwargs["duration_minutes"] = int(hour) * 60 + int(minute)
-
         
         # campos obrigatorios
         check_all = [id, origin, destination, price, text[0], text[2]]
