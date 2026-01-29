@@ -13,17 +13,15 @@ class BronzeToSilver:
         self.parser = GoogleFlightsParser()
         self.storage = CreateUpdateFiles()
         
-    
 
     def load_bronze(self):
         lines_raw = []
 
-        with self.bronze_file.open('r', encoding='utf-8') as f:
+        with open(self.bronze_file, 'r', encoding='utf-8') as f:
             for line in f:
                 line_raw = json.loads(line)
                 lines_raw.append(line_raw)
     
-        #### refatorar logica de list e dict
         for item in lines_raw:
             text = re.sub(r"\s+", " ", item['text']) 
             text = text.split()
