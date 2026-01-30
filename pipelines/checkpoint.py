@@ -1,4 +1,5 @@
 from pathlib import Path
+import json
 
 # checkpoint - guardar numero, offset em bytes
 
@@ -18,8 +19,12 @@ def process_jsonl_incremental(jsonl_path, checkpoint_path):
             if not line_bytes:
                 break # se entrar esta vazio ou fim da linha
             
-            next_offset = f.tell()
+            next_offset = f.tell() #checkpoint da linha que acabou de ser lida, ou seja, \n
             
+            line_str = line_bytes.decode('utf-8')
+            line_str = json.loads(line_str)
+            convert_line(line_str)
+
     
 
 
@@ -31,14 +36,12 @@ def read_checkpoint(checkpoint_path):
 
     return int(checkpoint_path.read_text(encoding='uft-8'))
 
+def convert_line(line_str):
+    id_item = line_str.get("id")
+    extracted_at = line_str.get("extrcted_at")
+    raw_text = line_str.get("text")
 
-    
 
-
-
-
-
-        
 
 
 a = Path('bronze/bronze_flights/raw.json')
