@@ -25,8 +25,6 @@ def process_jsonl_incremental(jsonl_path, checkpoint_path):
             line_str = json.loads(line_str)
             convert_line(line_str)
 
-    
-
 
 
 def read_checkpoint(checkpoint_path):
