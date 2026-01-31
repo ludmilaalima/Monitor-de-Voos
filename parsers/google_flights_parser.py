@@ -5,7 +5,7 @@ KNOW_AIRLINES = ['AZUL', 'LATAM', 'GOL']
 
 class GoogleFlightsParser:
 
-
+    @staticmethod
     def find_h(text):
         position_h = 0
 
@@ -20,21 +20,22 @@ class GoogleFlightsParser:
 
         return position_h
 
-
+    @staticmethod
     def find_price(text):
         for i, string in enumerate(text):
             if 'R$' in string:
                 return i, text[i+1]
         return None, None
         
-
+    @staticmethod
     def find_kg(text, price_index):
         for i, string in enumerate(text):
             if 'kg' in string:
                 return text[i-1:price_index]
         
         return None, None
-            
+
+    @staticmethod      
     def find_iatas(text):
         for string in text:
             match = re.search(r'\b([A-Z]{3})\s*[-–—]\s*([A-Z]{3})\b', string)
@@ -46,6 +47,7 @@ class GoogleFlightsParser:
 
         return None, None
     
+    @staticmethod
     def extract_airlines(raw_airline, know_airlines=KNOW_AIRLINES):
         if raw_airline is None:
             return None, None
@@ -75,7 +77,6 @@ class GoogleFlightsParser:
 
         return main_airline, all_airlines
     
-
 
     def parse_card(self, text, position_h, price, kg_index_raw, origin, destination, id, extracted_at):
         

@@ -18,6 +18,9 @@ class CreateUpdateFiles:
         data= Path('data/silver/silver_flights.csv')
         self.data_silver = Path(data)
 
+        #checkpoint
+        self.checkpoint = Path("data/checkpoints/bronze_flights_raw.offset")
+
 
     def create_storage(self):
 

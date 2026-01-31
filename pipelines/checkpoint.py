@@ -1,11 +1,18 @@
 from pathlib import Path
 import json
+from transform_bronze_to_silver import BronzeToSilver
+from storage import CreateUpdateFiles
 
 # checkpoint - guardar numero, offset em bytes
+
 
 def process_jsonl_incremental(jsonl_path, checkpoint_path):
     if not jsonl_path.exists():
         raise FileNotFoundError(f"Arquivo JSON não existe")
+    
+    
+    transform = BronzeToSilver()
+    storage = CreateUpdateFiles
 
 
     offset = read_checkpoint(checkpoint_path)
@@ -23,8 +30,12 @@ def process_jsonl_incremental(jsonl_path, checkpoint_path):
             
             line_str = line_bytes.decode('utf-8')
             line_str = json.loads(line_str)
-            convert_line(line_str)
+            parsed = transform.transform_bronze_to_silver(line_str)
 
+            if parsed:    
+                storage.update_silver(**parsed)
+                checkpoint_path.write_text(str(next_offset), encoding='utf-8')
+            
 
 
 def read_checkpoint(checkpoint_path):
@@ -32,15 +43,7 @@ def read_checkpoint(checkpoint_path):
         checkpoint_path.write_text("0", encoding='utf-8')
         return 0
 
-    return int(checkpoint_path.read_text(encoding='uft-8'))
 
-def convert_line(line_str):
-    id_item = line_str.get("id")
-    extracted_at = line_str.get("extrcted_at")
-    raw_text = line_str.get("text")
+    return int(checkpoint_path.read_text(encoding='utf-8'))
 
 
-
-
-a = Path('bronze/bronze_flights/raw.json')
-teste = process_jsonl_incremental(a, a)
