@@ -11,24 +11,21 @@ class BronzeToSilver:
     def __init__(self):
         self.bronze_file = Path("data/bronze/bronze_flights_raw.jsonl") 
         self.parser = GoogleFlightsParser()
-        self.storage = CreateUpdateFiles()
+       
         
 
-    def load_bronze(self):
-        lines_raw = []
+    def transform_bronze_to_silver(self, item):
 
-        with open(self.bronze_file, 'r', encoding='utf-8') as f:
-            for line in f:
-                line_raw = json.loads(line)
-                lines_raw.append(line_raw)
+        text = re.sub(r"\s+", " ", item['text']) 
+        text = text.split()
+        position_h = self.parser.find_h(text)
+        index_price, price = self.parser.find_price(text)
+        kg_index_raw = self.parser.find_kg(text, index_price)
+        origin, destination = self.parser.find_iatas(text)
+        parsed = self.parser.parse_card(text, position_h, price, kg_index_raw, origin, destination, item["id"], item['extracted_at'])
+        if parsed:
+            return parsed
+        return None
     
-        for item in lines_raw:
-            text = re.sub(r"\s+", " ", item['text']) 
-            text = text.split()
-            position_h = self.parser.find_h(text)
-            index_price, price = self.parser.find_price(text)
-            kg_index_raw = self.parser.find_kg(text, index_price)
-            origin, destination = self.parser.find_iatas(text)
-            parsed = self.parser.parse_card(text, position_h, price, kg_index_raw, origin, destination, item["id"], item['extracted_at'])
-            if parsed:
-                self.storage.update_silver(parsed)
+
+
