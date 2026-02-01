@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
-from transform_bronze_to_silver import BronzeToSilver
-from storage import CreateUpdateFiles
+from pipelines.transform_bronze_to_silver import BronzeToSilver
+from pipelines.storage import CreateUpdateFiles
 
 # checkpoint - guardar numero, offset em bytes
 
@@ -12,7 +12,7 @@ def process_jsonl_incremental(jsonl_path, checkpoint_path):
     
     
     transform = BronzeToSilver()
-    storage = CreateUpdateFiles
+    storage = CreateUpdateFiles()
 
 
     offset = read_checkpoint(checkpoint_path)

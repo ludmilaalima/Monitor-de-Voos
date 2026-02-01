@@ -9,39 +9,41 @@ from selenium.webdriver.chrome.options import Options
 from pipelines.storage import CreateUpdateFiles
 
 
+class IngestGoogleFlights:
+    def __init__(self):
+        self.create_update_files = CreateUpdateFiles()
+        self.create_update_files.create_storage() 
+    
+
+    def run_driver(self):
+        options = Options()
+        options.add_argument("--disable-blink-features=AutomationControlled") 
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option("useAutomationExtension", False)
+        driver = webdriver.Chrome(options=options) #abre instancia 
+
+        
+        #acessar navegador
+        driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDRk9ScgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDRk9SQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
+        #('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDQ1BWcgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
+        driver.maximize_window()
+
+        # tempo para que os itens aparecam
+        wait = WebDriverWait(driver, 20)
+        wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
+        wait.until(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
+        time.sleep(10)
 
 
-options = Options()
-options.add_argument("--disable-blink-features=AutomationControlled") 
-options.add_experimental_option("excludeSwitches", ["enable-automation"])
-options.add_experimental_option("useAutomationExtension", False)
-driver = webdriver.Chrome(options=options) #abre instancia 
-
-create_update_files = CreateUpdateFiles()
-create_update_files.create_storage() 
+        # achar elementos
+        list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
 
 
-#acessar navegador
-driver.get('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDRk9ScgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDRk9SQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
-#('https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTAyLTE3agcIARIDQ1BWcgwIAxIIL20vMGwzcTIaIxIKMjAyNi0wMi0yMWoMCAMSCC9tLzBsM3EycgcIARIDQ1BWQAFIAXABggELCP___________wGYAQE&tfu=EgoIABABGAAgAigDIgMKATA')
-driver.maximize_window()
+        for i, _ in enumerate(list_card_voos):
+            if list_card_voos[i]:
+                text = list_card_voos[i].text
+                self.create_update_files.update_bronze(text)
 
-# tempo para que os itens aparecam
-wait = WebDriverWait(driver, 20)
-wait.until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
-wait.until(EC.invisibility_of_element_located((By.XPATH, "//*[contains(text(), 'Verificando preços de várias fontes')]")))
-time.sleep(10)
-
-
-# achar elementos
-list_card_voos = driver.find_elements(By.CSS_SELECTOR, "li.pIav2d")
-
-
-for i, _ in enumerate(list_card_voos):
-    if list_card_voos[i]:
-        text = list_card_voos[i].text
-        create_update_files.update_bronze(text)
-
-driver.quit()
+        driver.quit()
      
         
