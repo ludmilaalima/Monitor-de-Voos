@@ -14,10 +14,11 @@ def get_db():
     finally:
         db.close()
 
-
+@app.get('/health')
 def health():
     return {'status':'ok'}
 
+@app.post('/monitors')
 def create_monitor(payload, db: Session = Depends(get_db)):
     required = ['origin_iata', 'destination_iata', 'departure_date', 'trip_type']
     for r in required:
@@ -45,10 +46,15 @@ def create_monitor(payload, db: Session = Depends(get_db)):
         'id':m.id
     }
     
-
+"""
+refatorar pra pydantic
+"""
+@app.get('/monitors')
 def list_monitors(db: Session = Depends(get_db)):
-    return db.query(Monitor).all()
-
+    #return db.query(Monitor).all()
+    q = select(Monitor)
+    monitors = db.execute(q).scalars().all()
+    return [{'id': m.id, 'origin_iata': m.origin_iata, 'destination_iata' : m.destination_iata} for m in monitors] 
 
     
 
