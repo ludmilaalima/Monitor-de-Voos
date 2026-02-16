@@ -16,7 +16,7 @@ class Monitor(Base):
     destination_iata: Mapped[str] = mapped_column(String(3), nullable=False)
     trip_type: Mapped[str] = mapped_column(String(10), nullable=False, default='round_trip') #one way or 
     departure_date: Mapped[datetime] = mapped_column(Date, nullable=False)
-    return_date: Mapped[datetime | None] = mapped_column(Date, nullable=None)
+    return_date: Mapped[datetime] = mapped_column(Date, nullable=False)
     adults: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     frequency_hours: Mapped[int] = mapped_column(Integer, nullable=False, default=6)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
