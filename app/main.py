@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Body
 from app.db import SessionLocal, engine
 from app.models import Base, Monitor
 from sqlalchemy.orm import Session
@@ -19,8 +19,9 @@ def health():
     return {'status':'ok'}
 
 @app.post('/monitors')
-def create_monitor(payload, db: Session = Depends(get_db)):
+def create_monitor(payload: dict = Body, db: Session = Depends(get_db)):
     required = ['origin_iata', 'destination_iata', 'departure_date', 'trip_type']
+    print(type(payload))
     for r in required:
         if r not in payload:
             raise HTTPException(status_code=400, detail=f'missing field: {r}')
@@ -33,11 +34,12 @@ def create_monitor(payload, db: Session = Depends(get_db)):
         origin_iata = origin,
         destination_iata = destination,
         trip_type = trip_type,
-        departure_date = payload['departure_iata'],
+        departure_date = payload['departure_date'],
         return_date = payload.get('return_date') ,
-        frequency_hours=int(payload.get('frequency_hours', 6)),
-        is_active = bool(payload.get('is_active'), True),
-        adults = int(payload.get('adults'), 1))
+        frequency_hours=int(payload.get('frequency_hours', 6)
+        #is_active = bool(payload.get('is_active'), True),
+        #adults = int(payload.get('adults'), 1))
+        ))
 
     db.add(m)
     db.commit()
