@@ -1,8 +1,9 @@
 from fastapi import FastAPI, HTTPException, Depends, Body
 from app.db import SessionLocal, engine
-from app.models import Base, Monitor
+from app.models import Base, Monitor, MonitorRun
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from datetime import date, datetime
 
 
 app = FastAPI(title='Monitor de Voos')
@@ -19,7 +20,7 @@ def health():
     return {'status':'ok'}
 
 @app.post('/monitors')
-def create_monitor(payload: dict = Body, db: Session = Depends(get_db)):
+def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
     required = ['origin_iata', 'destination_iata', 'departure_date', 'trip_type']
     print(type(payload))
     for r in required:
@@ -29,13 +30,13 @@ def create_monitor(payload: dict = Body, db: Session = Depends(get_db)):
     origin = str(payload['origin_iata'])
     destination = str(payload["destination_iata"])
     trip_type = str(payload['trip_type'])
-
+    
     m = Monitor(
         origin_iata = origin,
         destination_iata = destination,
         trip_type = trip_type,
-        departure_date = payload['departure_date'],
-        return_date = payload.get('return_date') ,
+        departure_date = date.fromisoformat(payload['departure_date']),
+        #return_date = date.fromisoformat(payload['return_date']),
         frequency_hours=int(payload.get('frequency_hours', 6)
         #is_active = bool(payload.get('is_active'), True),
         #adults = int(payload.get('adults'), 1))
@@ -61,4 +62,24 @@ def list_monitors(db: Session = Depends(get_db)):
     
 
 
-    
+def create_run(db, monitor_id):
+    run = MonitorRun(monitor_id=monitor_id, status="running")
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+    return run
+
+def finished_run(db, monitor_id):
+    ...
+
+def sucess_run(db, run: MonitorRun, offers_count: int, min_price_cents: int):
+    run.status = 'success' if offers_count > 0 else "empty"
+    run.offers_count = offers_count
+    run.min_price = min_price_cents if min_price_cents > 0 else None
+    run.finished_at = datetime.now()
+
+
+
+
+
+

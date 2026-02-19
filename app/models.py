@@ -27,6 +27,7 @@ class Monitor(Base):
     runs: Mapped[list["MonitorRun"]] = relationship(back_populates='monitor', cascade = 'all, delete-orphan')
 
 
+#testar monitor run
 class MonitorRun(Base):
     __tablename__ = 'monitor_runs'
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=str(uuid.uuid4()))
