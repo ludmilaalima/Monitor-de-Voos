@@ -61,22 +61,38 @@ def list_monitors(db: Session = Depends(get_db)):
 
     
 
-
-def create_run(db, monitor_id):
+@app.post('/monitors/{monitor_id}/run')
+def create_run_monitor(monitor_id, db: Session = Depends(get_db)):
+    monitor = db.get(Monitor, monitor_id)
+    if not monitor:
+        raise HTTPException(status_code=404, detail='monitor not found or not exist')
+    
     run = MonitorRun(monitor_id=monitor_id, status="running")
     db.add(run)
     db.commit()
     db.refresh(run)
-    return run
+    
 
-def finished_run(db, monitor_id):
-    ...
+    # por enquanto....
+    price_cents = [2100, 3600, 1000]
+    offers_count = len(price_cents)
+    min_price = min(price_cents) if price_cents else None
 
-def sucess_run(db, run: MonitorRun, offers_count: int, min_price_cents: int):
+    run = sucess_run(db, run, offers_count, min_price)
+   
+    return {"run_id": run.id, "status": run.status, "offers_count": run.offers_count, "min_price_cents": run.min_price}
+
+
+#depois rodar c airflow
+def sucess_run(db, run: MonitorRun, offers_count: int, min_price: int):
     run.status = 'success' if offers_count > 0 else "empty"
     run.offers_count = offers_count
-    run.min_price = min_price_cents if min_price_cents > 0 else None
+    run.min_price = min_price if min_price > 0 else None
     run.finished_at = datetime.now()
+
+    db.commit()
+    db.refresh(run)
+    return run
 
 
 
