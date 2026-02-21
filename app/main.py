@@ -78,7 +78,7 @@ def create_run_monitor(monitor_id, db: Session = Depends(get_db)):
     offers_count = len(price_cents)
     min_price = min(price_cents) if price_cents else None
 
-    run = sucess_run(db, run, offers_count, min_price)
+    #run = sucess_run(db, run, offers_count, min_price)
    
     return {"run_id": run.id, "status": run.status, "offers_count": run.offers_count, "min_price_cents": run.min_price}
 
