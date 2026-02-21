@@ -94,6 +94,24 @@ def sucess_run(db, run: MonitorRun, offers_count: int, min_price: int):
     db.refresh(run)
     return run
 
+@app.get("/monitors/{monitor_id}/runs")
+def list_runs(monitor_id, db: Session = Depends(get_db)):
+    monitor = db.get(Monitor, monitor_id)
+    if not monitor:
+        raise HTTPException(status_code=404, detail='monitor not found or not exist')
+    
+    q = select(MonitorRun).where(MonitorRun.monitor_id == monitor_id).order_by(MonitorRun.started_at)
+    runs = db.execute(q).scalars().all()
+
+    return [{'id': run.id,
+            'monitor_id': run.monitor_id,
+            'status': run.status
+
+            } 
+        
+            
+            for run in runs]
+
 
 
 
