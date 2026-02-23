@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitor de Voos</title>
 </head>
 <body>
-    <table>
-    
+    <h1>Monitores</h1>  
+    <form action="Cadastro de Monitor" method="post">
+        <p><label for="origem_iata">Origem:</label>
+            <input type="text" name="origem" id="iorigem"></p>
 
-    </table>
+        <p><label for="destino_iata">Destino:</label>
+            <input type="text" name="destino_iata" id="idestino"></p>
+        <p><label for="data_viagem">Data da Viagem:</label>
+            <input type="text" name="data_viagem" id="idata_ida"></p>
+        <p><input type="submit" value="Iniciar Monitoração"></p>
+    </form>
+    
 </body>
 </html>
