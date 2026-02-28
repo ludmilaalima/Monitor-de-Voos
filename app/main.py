@@ -19,7 +19,7 @@ def get_db():
 def health():
     return {'status':'ok'}
 
-@app.post('/monitors')
+@app.post('/criar-monitor')
 def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
     required = ['origin_iata', 'destination_iata', 'departure_date', 'trip_type']
     print(type(payload))
@@ -37,10 +37,10 @@ def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
         trip_type = trip_type,
         departure_date = date.fromisoformat(payload['departure_date']),
         #return_date = date.fromisoformat(payload['return_date']),
-        frequency_hours=int(payload.get('frequency_hours', 6)
+        frequency_hours=int(payload.get('frequency_hours', 6))
         #is_active = bool(payload.get('is_active'), True),
         #adults = int(payload.get('adults'), 1))
-        ))
+        )
 
     db.add(m)
     db.commit()
