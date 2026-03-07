@@ -1,4 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends, Body
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 from app.db import SessionLocal, engine
 from app.models import Base, Monitor, MonitorRun
 from sqlalchemy.orm import Session
@@ -8,12 +12,22 @@ from datetime import date, datetime
 
 app = FastAPI(title='Monitor de Voos')
 
+app.mount("/static", StaticFiles(directory='static'), name='static')
+templates = Jinja2Templates(directory='templates')
+
+
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+@app.get('/', response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse('create.html', {"request": request})
+
 
 @app.get('/health')
 def health():
