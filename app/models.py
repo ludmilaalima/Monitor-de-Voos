@@ -11,16 +11,16 @@ def utcnow():
 
 class Monitor(Base):
     __tablename__ = 'monitors'
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default= str(uuid.uuid4()))
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default = lambda: str(uuid.uuid4()))
     origin_iata: Mapped[str] = mapped_column(String(3), nullable=False)
     destination_iata: Mapped[str] = mapped_column(String(3), nullable=False)
     trip_type: Mapped[str] = mapped_column(String(10), nullable=False, default='round_trip') #one way or 
     departure_date: Mapped[datetime] = mapped_column(Date, nullable=False)
-    return_date: Mapped[datetime] = mapped_column(Date, nullable=False)
+    return_date: Mapped[datetime | None] = mapped_column(Date, nullable=True)
     adults: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     frequency_hours: Mapped[int] = mapped_column(Integer, nullable=False, default=6)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    created_at: Mapped[datetime] = mapped_column(Date, nullable=False, default=utcnow())
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default= lambda: utcnow())
     last_run_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     next_run_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     last_status: Mapped[str | None] = mapped_column(String(20), nullable=True)
@@ -30,9 +30,9 @@ class Monitor(Base):
 #testar monitor run
 class MonitorRun(Base):
     __tablename__ = 'monitor_runs'
-    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=str(uuid.uuid4()))
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default = lambda: str(uuid.uuid4()))
     monitor_id: Mapped[str] = mapped_column(ForeignKey('monitors.id'), nullable=False)
-    started_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=utcnow())
+    started_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: utcnow())
     finished_at: Mapped[datetime |  None] = mapped_column(DateTime, nullable=True)
     status: Mapped[str] = mapped_column(String(15), nullable=False, default='running')
     offers_count: Mapped[int] = mapped_column(Integer, nullable=True)
