@@ -1,4 +1,8 @@
 from fastapi import FastAPI, HTTPException, Depends, Body
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 from app.db import SessionLocal, engine
 from app.models import Base, Monitor, MonitorRun
 from sqlalchemy.orm import Session
@@ -8,12 +12,26 @@ from datetime import date, datetime
 
 app = FastAPI(title='Monitor de Voos')
 
+app.mount("/static", StaticFiles(directory='app/static'), name='static')
+templates = Jinja2Templates(directory='app/templates')
+
+
+
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
+'''@app.get('/', response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse('create.html', {"request": request})'''
+
+@app.get('/monitores', response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse('list.html', {"request": request})
+
 
 @app.get('/health')
 def health():
@@ -45,6 +63,9 @@ def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
     db.add(m)
     db.commit()
     db.refresh(m)
+
+    print('deu bom pae')
+    
     return {
         'id':m.id
     }
@@ -52,9 +73,10 @@ def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
 """
 refatorar pra pydantic
 """
-@app.get('/monitors')
+@app.get('/monitores')
 def list_monitors(db: Session = Depends(get_db)):
     #return db.query(Monitor).all()
+    print('entrou aqui')
     q = select(Monitor)
     monitors = db.execute(q).scalars().all()
     return [{'id': m.id, 'origin_iata': m.origin_iata, 'destination_iata' : m.destination_iata} for m in monitors] 
