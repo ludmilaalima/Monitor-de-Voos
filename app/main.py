@@ -24,20 +24,20 @@ def get_db():
     finally:
         db.close()
 
-'''@app.get('/', response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse('create.html', {"request": request})'''
-
 @app.get('/monitores', response_class=HTMLResponse)
-def home(request: Request):
+def home_monitors(request: Request):
     return templates.TemplateResponse('list.html', {"request": request})
+
+@app.get('/', response_class=HTMLResponse)
+def home(request: Request):
+    return templates.TemplateResponse('create.html', {"request": request})
 
 
 @app.get('/health')
 def health():
     return {'status':'ok'}
 
-@app.post('/criar-monitor')
+@app.post('/api/create-monitor')
 def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
     required = ['origin_iata', 'destination_iata', 'departure_date', 'trip_type']
     print(type(payload))
@@ -73,7 +73,7 @@ def create_monitor(payload: dict = Body(...), db: Session = Depends(get_db)):
 """
 refatorar pra pydantic
 """
-@app.get('/monitores')
+@app.get('/api/monitors')
 def list_monitors(db: Session = Depends(get_db)):
     #return db.query(Monitor).all()
     print('entrou aqui')

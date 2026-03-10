@@ -7,7 +7,7 @@ form.addEventListener("submit", async (e) => {
   const data = Object.fromEntries(formData.entries());
 
   try {
-    const response = await fetch("/criar-monitor", {
+    const response = await fetch("/api/create-monitor", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
