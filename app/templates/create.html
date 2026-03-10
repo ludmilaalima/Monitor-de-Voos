@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitor de Voos</title>
-    <script src="/static/monitor.js" defer></script>
+    <script src="/static/create-monitor.js" defer></script>
 </head>
 <body>
     <h1>Monitores</h1>  
-    <form id="monitorForm" action="/criar-monitor" method="post">
+    <form id="monitorForm" action="/api/create-monitor" method="post">
         <p><label for="origem_iata">Origem:</label>
            <input type="text" name="origin_iata" id="origem_iata"></p> 
         
