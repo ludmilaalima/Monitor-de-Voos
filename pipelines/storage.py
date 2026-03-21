@@ -11,15 +11,15 @@ import json
 class CreateUpdateFiles:
     def __init__(self):
         # bronze - raw
-        data_bronze_raw =  Path("data/bronze/bronze_flights_raw.jsonl") 
+        data_bronze_raw =  Path("data/bronze/bronze_flights_raw_CPVeCNF.jsonl") 
         self.data_bronze_raw = Path(data_bronze_raw)
 
         # silver 
-        data= Path('data/silver/silver_flights.csv')
+        data= Path('data/silver/silver_flights_CPVeCNF.csv')
         self.data_silver = Path(data)
 
         #checkpoint
-        self.checkpoint = Path("data/checkpoints/bronze_flights_raw.offset")
+        self.checkpoint = Path("data/checkpoints/bronze_flights_raw_CPVeCNF.offset")
 
 
     def create_storage(self):
@@ -32,6 +32,11 @@ class CreateUpdateFiles:
     
             df = pd.DataFrame(columns=['id', 'origin_iata', 'destination_iata', 'departure_time_local', 'arrival_time_local', 'main_airline', 'all_airlines', 'duration_iso8601', 'duration_minutes', 'num_stops', 'emissions_raw', 'emissions_co2e_kg', 'price', "extracted_at"])
             df.to_csv(self.data_silver, index=False, encoding='utf-8-sig')
+        
+        
+        if not self.checkpoint.exists():
+            self.checkpoint.write_text('0', encoding='utf-8')
+
 
 
     def update_bronze(self, text):
@@ -43,6 +48,7 @@ class CreateUpdateFiles:
         with open(self.data_bronze_raw, 'a', encoding='utf-8') as f:
             f.write(json.dumps(register, ensure_ascii=False) + '\n')
 
+            
 
 
     def update_silver(self, id, origin_iata, destination_iata, departure_time_local, arrival_time_local, main_airline, all_airlines,  duration_iso8601,  duration_minutes, num_stops, emissions_raw,  price, extracted_at):
