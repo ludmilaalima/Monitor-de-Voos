@@ -30,7 +30,7 @@ def home_monitors(request: Request):
 
 @app.get('/', response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse('create.html', {"request": request})
+    return templates.TemplateResponse('create-monitor.html', {"request": request})
 
 
 @app.get('/health')

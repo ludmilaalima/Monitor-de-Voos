@@ -11,15 +11,15 @@ import json
 class CreateUpdateFiles:
     def __init__(self):
         # bronze - raw
-        data_bronze_raw =  Path("data/bronze/bronze_flights_raw_CPVeCNF.jsonl") 
+        data_bronze_raw =  Path("data/bronze/bronze_flights_raw_CPV-CNF.jsonl") 
         self.data_bronze_raw = Path(data_bronze_raw)
 
         # silver 
-        data= Path('data/silver/silver_flights_CPVeCNF.csv')
+        data= Path('data/silver/silver_flights_CPV-CNF.csv')
         self.data_silver = Path(data)
 
         #checkpoint
-        self.checkpoint = Path("data/checkpoints/bronze_flights_raw_CPVeCNF.offset")
+        self.checkpoint = Path("data/checkpoints/bronze_flights_raw_CPV-CNF.offset")
 
 
     def create_storage(self):

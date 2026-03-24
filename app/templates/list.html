@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitores Cadastrados</title>
-    <script src="/static/list-monitor.js" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitores Cadastrados</title>
+  <link rel="stylesheet" href="/static/list-monitor.css">
+  <script src="/static/list-monitor.js" defer></script>
 </head>
 <body>
-    <h1>Monitores</h1>
-    <button id="btnReload">Recarregar</button>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>Monitores</h1>
+        <p>Visualize e recarregue os monitores de voos cadastrados</p>
+      </div>
 
-    <table id="listMonitor" border="1">
-        <thead>
+      <div class="actions">
+        <button id="btnReload" class="reload-btn" type="button">
+          Recarregar
+        </button>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="listMonitor">
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>Origem</th>
-                <th>Destino</th>
-                <th>Frequência</th>
-                <th>Status</th>
-                <th>Menor Valor</th>
+              <th>ID</th>
+              <th>Origem</th>
+              <th>Destino</th>
+              <th>Frequência</th>
+              <th>Status</th>
+              <th>Menor Valor</th>
             </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-    
+          </thead>
+          <tbody>
+            <!-- Preenchido via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer-note">
+        A lista será atualizada ao clicar em recarregar.
+      </div>
+    </div>
+  </div>
 </body>
 </html>

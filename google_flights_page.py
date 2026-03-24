@@ -16,7 +16,7 @@ import os
 storage = storage.CreateUpdateFiles()
 storage.create_storage()
 
-'''parser = google_flights_parser.GoogleFlightsParser()
+parser = google_flights_parser.GoogleFlightsParser()
 
 
 chrome_options = Options()
@@ -67,13 +67,13 @@ for i, _ in enumerate(list_card_voos):
         index_price, price = parser.find_price(text)
         kg_index_raw = parser.find_kg(text, index_price)
         origin, destination = parser.find_iatas(text)
-        '''
+        
 
 ### update no silver
-from pathlib import Path
+'''from pathlib import Path
 
 bronze_path = Path('data/bronze/bronze_flights_raw_CPVeCNF.jsonl')
 checkpoint_path = Path('data/checkpoints/bronze_flights_raw_CPVeCNF.offset')
 
 
-checkpoint = checkpoint.process_jsonl_incremental(bronze_path, checkpoint_path)
+checkpoint = checkpoint.process_jsonl_incremental(bronze_path, checkpoint_path)'''
