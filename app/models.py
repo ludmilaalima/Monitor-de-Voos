@@ -1,5 +1,5 @@
-from app.db import engine
-from .db import Base
+from app.database import engine
+from .database import Base
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Date, Integer, Boolean, DateTime, ForeignKey, Text
 import uuid
@@ -34,7 +34,7 @@ class MonitorRun(Base):
     monitor_id: Mapped[str] = mapped_column(ForeignKey('monitors.id'), nullable=False)
     started_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=lambda: utcnow())
     finished_at: Mapped[datetime |  None] = mapped_column(DateTime, nullable=True)
-    status: Mapped[str] = mapped_column(String(15), nullable=False, default='running')
+    status: Mapped[str] = mapped_column(String(15), nullable=False, default='')
     offers_count: Mapped[int] = mapped_column(Integer, nullable=True)
     min_price: Mapped[int | None] = mapped_column(Integer, nullable=True)
 

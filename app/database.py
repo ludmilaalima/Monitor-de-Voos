@@ -11,6 +11,18 @@ connect_args = {}
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
+# fast api
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# worker
+def get_session():
+    return SessionLocal()
+
 class Base(DeclarativeBase):
     ...
 
