@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-from app.db import SessionLocal, engine
+from app.database import SessionLocal, engine
 from app.models import Base, Monitor, MonitorRun
 from sqlalchemy.orm import Session
 from sqlalchemy import select
@@ -30,7 +30,7 @@ def home_monitors(request: Request):
 
 @app.get('/', response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse('create.html', {"request": request})
+    return templates.TemplateResponse('create-monitor.html', {"request": request})
 
 
 @app.get('/health')

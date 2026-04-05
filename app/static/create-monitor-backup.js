@@ -1,12 +1,5 @@
 const form = document.getElementById("monitorForm");
-const popup = document.getElementById('popup');
 
-function showPopup(message, type = 'success') {
-  popup.textContent = message;
-  popup.className = `popup ${type}`;
-  popup.classList.remove("hidden");
-
-}
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -26,9 +19,6 @@ form.addEventListener("submit", async (e) => {
       console.log("Erro!", response.status, result)
       return;
       }
-
-    showPopup(result?.message || "Criado com sucesso!", 'success' );
-    form.reset();
     
     console.log('Criado', result)
   } catch (error){

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor de Voos</title>
+  <link rel="stylesheet" href="/static/create-monitor.css">
+  <script src="/static/create-monitor.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="header">
+        <h1>Monitor de Voos</h1>
+        <p>Cadastre uma nova monitoração de passagem aérea</p>
+      </div>
+
+      <form id="monitorForm" action="/api/create-monitor" method="post">
+        <div class="row">
+          <div class="field">
+            <label for="origem_iata">Origem</label>
+            <input
+              type="text"
+              name="origin_iata"
+              id="origem_iata"
+              maxlength="3"
+              placeholder="Ex.: FOR"
+              required
+            >
+            <span class="hint">De onde?</span>
+          </div>
+
+          <div class="field">
+            <label for="destino_iata">Destino</label>
+            <input
+              type="text"
+              name="destination_iata"
+              id="destino_iata"
+              maxlength="3"
+              placeholder="Ex.: GRU"
+              required
+            >
+            <span class="hint">Para onde?</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="data_viagem">Data da viagem</label>
+            <input
+              type="date"
+              name="departure_date"
+              id="data_viagem"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="tipo_viagem">Tipo de viagem</label>
+            <select name="trip_type" id="tipo_viagem" required>
+              <option value="">Selecione</option>
+              <option value="one_way">Somente ida</option>
+              <option value="round_trip">Ida e volta</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Iniciar monitoração
+        </button>
+      </form>
+
+      <div class="footer-note">
+        Os dados serão enviados para criação do monitor automaticamente.
+      </div>
+    </div>
+  </div>
+
+  <div id="popup" class="popup hidden"></div>
+</body>
+</html>
